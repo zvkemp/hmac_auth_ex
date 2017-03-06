@@ -1,6 +1,6 @@
 defmodule HMACAuth do
   def sign(%{ secret: secret, method: method, request_id: request_id, path: path, data: data } = args) do
-    timestamp = args[:timestamp] || utc_timestamp
+    timestamp = args[:timestamp] || utc_timestamp()
     :crypto.hmac(
       :sha,
       secret,

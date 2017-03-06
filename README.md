@@ -2,7 +2,10 @@
 
 Intended to be compatible with the ruby version at http://www.github.com/zvkemp/hmac_auth.
 
-**TODO: Add description**
+Note:
+
+If used to verify POST requests, the included `HMACAuthEx.Plug` must be used before `Plug.Parsers` (it requires
+access to the raw request body, which is removed by json parsing et al).
 
 ## Installation
 
