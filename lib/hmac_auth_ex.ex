@@ -10,7 +10,7 @@ defmodule HMACAuth do
 
   def verify(%{ signature: signature } = args) do
     ttl = args[:ttl] || 3
-    Stream.iterate(utc_timestamp, &(&1 - 1))
+    Stream.iterate(utc_timestamp(), &(&1 - 1))
     |> Enum.take(ttl)
     |> Enum.find(fn (ts) ->
       sign(Map.drop(%{ args | timestamp: ts }, [:signature, :ttl])) == signature

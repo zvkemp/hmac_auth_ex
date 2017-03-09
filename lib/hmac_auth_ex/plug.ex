@@ -4,7 +4,7 @@ defmodule HMACAuthEx.Plug do
   def init(options), do: options
 
   def call(conn, _opts) do
-    Plug.Conn.put_private(conn, :hmac_verified, case verify_hmac(conn) do
+    put_private(conn, :hmac_verified, case verify_hmac(conn) do
       :ok -> true
       _   -> false
     end)
