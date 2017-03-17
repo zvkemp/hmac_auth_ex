@@ -39,4 +39,16 @@ defmodule HMACAuthTest do
     signature = HMACAuth.sign(%{ digestables | timestamp: ts })
     assert HMACAuth.verify(Map.merge(digestables, %{ signature: signature, ttl: 20 }))
   end
+
+  test "with server time drift", %{ digestables: digestables } do
+    ts = HMACAuth.utc_timestamp + 3
+    signature = HMACAuth.sign(%{ digestables | timestamp: ts })
+    assert HMACAuth.verify(Map.merge(digestables, %{ signature: signature, ttl: 20 }))
+  end
+
+  test "with server time drift outside the verification range", %{ digestables: digestables } do
+    ts = HMACAuth.utc_timestamp + 3
+    signature = HMACAuth.sign(%{ digestables | timestamp: ts })
+    refute  HMACAuth.verify(Map.merge(digestables, %{ drift: 1, signature: signature, ttl: 20 }))
+  end
 end
