@@ -1,5 +1,6 @@
 defmodule HMACAuthEx.Plug do
   import Plug.Conn
+  require Logger
 
   def init(options), do: options
 

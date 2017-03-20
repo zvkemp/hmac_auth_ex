@@ -1,10 +1,13 @@
 defmodule HMACAuth do
+  require Logger
   def sign(%{ secret: secret, method: method, request_id: request_id, path: path, data: data } = args) do
     timestamp = args[:timestamp] || utc_timestamp()
+    data = [method, request_id, path, data, timestamp] |> Enum.join("-")
+    Logger.info(data)
     :crypto.hmac(
       :sha,
       secret,
-      [method, request_id, path, data, timestamp] |> Enum.join("-")
+      data
     ) |> Base.encode16(case: :lower)
   end
 
@@ -17,11 +20,18 @@ defmodule HMACAuth do
     drift = args[:drift] || default_drift()
     ttl   = (args[:ttl] || default_ttl()) + drift
 
-    Stream.iterate(utc_timestamp() + drift, &(&1 - 1))
+    result = Stream.iterate(utc_timestamp() + drift, &(&1 - 1))
     |> Enum.take(ttl)
     |> Enum.find(fn (ts) ->
       sign(Map.drop(%{ args | timestamp: ts }, [:signature, :ttl])) == signature
     end)
+
+    case result do
+      nil ->
+        Logger.warn("UNABLE TO VERIFY #{inspect(args)}")
+        nil
+      _ -> result
+    end
   end
 
   def utc_timestamp do
