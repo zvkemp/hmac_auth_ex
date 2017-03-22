@@ -17,10 +17,11 @@ defmodule HMACAuth do
     # time it takes to receive the request, we could see failed verifications signatures
     # made around the time the second rolls over. Advance a bit into the future
     # (and compensate in the ttl) to prevent this.
-    drift = args[:drift] || default_drift()
-    ttl   = (args[:ttl] || default_ttl()) + drift
+    drift      = args[:drift] || default_drift()
+    ttl        = (args[:ttl]  || default_ttl()) + drift
+    initial_ts = utc_timestamp()
 
-    result = Stream.iterate(utc_timestamp() + drift, &(&1 - 1))
+    result = Stream.iterate(initial_ts + drift, &(&1 - 1))
     |> Enum.take(ttl)
     |> Enum.find(fn (ts) ->
       sign(Map.drop(%{ args | timestamp: ts }, [:signature, :ttl])) == signature
@@ -28,7 +29,7 @@ defmodule HMACAuth do
 
     case result do
       nil ->
-        Logger.warn("UNABLE TO VERIFY #{inspect(args)}")
+        Logger.warn("UNABLE TO VERIFY ts: #{initial_ts} drift: #{drift} ttl: #{ttl} args: #{inspect(args)}")
         nil
       _ -> result
     end
