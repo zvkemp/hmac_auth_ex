@@ -1,4 +1,5 @@
 defmodule HMACAuth do
+  @spec sign(%{ secret: binary, method: binary, request_id: binary, path: binary, data: binary }) :: binary
   def sign(%{ secret: secret, method: method, request_id: request_id, path: path, data: data } = args) do
     timestamp = args[:timestamp] || utc_timestamp()
     :crypto.hmac(
@@ -8,6 +9,7 @@ defmodule HMACAuth do
     ) |> Base.encode16(case: :lower)
   end
 
+  @spec verify(map()) :: integer()
   def verify(%{ signature: signature } = args) do
     # Welcome, time travellers!
     # In case the clock of the server signing the request is ahead by more than the
@@ -24,14 +26,17 @@ defmodule HMACAuth do
     end)
   end
 
+  @spec utc_timestamp() :: integer()
   def utc_timestamp do
     :os.system_time(:seconds)
   end
 
+  @spec default_drift() :: integer()
   defp default_drift do
     Application.get_env(:hmac_auth_ex, :drift, 5)
   end
 
+  @spec default_ttl() :: integer()
   defp default_ttl do
     Application.get_env(:hmac_auth_ex, :ttl, 5)
   end

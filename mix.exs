@@ -3,7 +3,7 @@ defmodule HMACAuth.Mixfile do
 
   def project do
     [app: :hmac_auth_ex,
-     version: "0.2.0",
+     version: "0.3.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -27,6 +27,9 @@ defmodule HMACAuth.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:plug, "~> 1.3"}]
+    [
+      {:plug, "~> 1.3"},
+      {:dialyxir, "~> 0.5", only: :dev, runtime: :false}
+    ]
   end
 end
