@@ -13,17 +13,23 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   1. Add `hmac_auth_ex` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:hmac_auth_ex, "~> 0.1.0"}]
-    end
-    ```
+```elixir
+def deps do
+  [{:hmac_auth_ex, "~> 0.3.0"}]
+end
+```
+  
+  2. Add the required config in `config/{env}.exs`:
+  
+```elixir
+  config :hmac_auth_ex, keys: %{key => value}
+```
 
-  2. Ensure `hmac_auth_ex` is started before your application:
+  3. Ensure `hmac_auth_ex` is started before your application:
 
-    ```elixir
-    def application do
-      [applications: [:hmac_auth_ex]]
-    end
-    ```
+```elixir
+def application do
+  [applications: [:hmac_auth_ex]]
+end
+```
 
