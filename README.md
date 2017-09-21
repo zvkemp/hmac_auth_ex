@@ -33,3 +33,25 @@ def application do
 end
 ```
 
+  4. (Optional) If using the plug, add this to your endpoint (usually before the router):
+  
+```elixir
+plug HMACAuthEx.Plug
+```
+
+This will add an `hmac_verified: boolean` key to `conn.private`. A basic authentication function might look like this:
+```elixir
+  defp authenticate(conn, _) do
+    cond do
+      Mix.env == :dev -> conn # to skip verification in the dev environment
+      conn.private.hmac_verified -> conn
+      true ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: :signature})
+        |> halt
+    end
+  end
+```
+
+
