@@ -1,4 +1,4 @@
-defmodule HMACAuth.Mixfile do
+defmodule HMACAuth.MixProject do
   use Mix.Project
 
   def project do
@@ -7,14 +7,17 @@ defmodule HMACAuth.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     package: package(),
+     description: description(),
+     source_url: github_url()]
   end
 
   # Configuration for the OTP application
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    []
   end
 
   # Dependencies can be Hex packages:
@@ -30,6 +33,22 @@ defmodule HMACAuth.Mixfile do
     [
       {:plug, "~> 1.3"},
       {:dialyxir, "~> 0.5", only: :dev, runtime: :false}
+    ]
+  end
+
+  defp description do
+    "One-time token (shared secret) HTTP authorization with TTL"
+  end
+
+  defp github_url do
+   "https://github.com/zvkemp/hmac_auth_ex"
+  end
+
+  defp package do
+    [
+      maintainers: ["Zach Kemp"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => github_url()}
     ]
   end
 end
