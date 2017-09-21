@@ -27,6 +27,9 @@ defmodule HMACAuth.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:plug, "~> 1.3"}]
+    [
+      {:plug, "~> 1.3"},
+      {:dialyxir, "~> 0.5", only: :dev, runtime: :false}
+    ]
   end
 end
